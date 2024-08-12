@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-
 import FormInput from '../form-input/form-input.component';
 import CustomButton from "../custom-button/custom-button.component";
-
 import { signInWithGooglePopup } from "../../firebase/firebase.utils"; // Corrected import
-
 import './sign-in.styles.scss';
 
 const SignIn = () => {
