@@ -1,13 +1,22 @@
-body {
+/* Define custom font first */
+@font-face {
     font-family: 'Open Sans Condensed';
+    src: url('https://fonts.gstatic.com/s/opensanscondensed/v23/z7NFdQDnbTkabZAIOl9il_O6KJj73e7Ff1GhDuXMRw.woff2') format('woff2');
+    font-display: swap; /* Ensures fallback font is used until custom font loads */
+}
+
+/* global styles */
+* {
+    box-sizing: border-box;
+}
+
+/* Specific element styles */
+body {
+    font-family: 'Open Sans Condensed', sans-serif; /* Use the custom font with a fallback */
     padding: 20px 60px;
 }
 
 a {
     text-decoration: none;
     color: black;
-}
-
-* {
-    box-sizing: border-box;
 }
