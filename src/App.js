@@ -7,7 +7,7 @@ import ShopPage from "./pages/shop/shop.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up.component/sign-in-and-sign-up.component";
 import Header from "./components/header/header.component";
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
-import { onSnapshot } from "firebase/firestore"; // Import onSnapshot
+import { onSnapshot } from "firebase/firestore"; // Import onSnapshot for real-time updates
 
 class App extends React.Component {
   constructor() {
@@ -18,13 +18,14 @@ class App extends React.Component {
   }
 
   unsubscribeFromAuth = null;
-  
+  unsubscribeFromSnapshot = null;
+
   componentDidMount() {
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
 
-        // Use onSnapshot for real-time updates
+        // Subscribe to real-time updates using onSnapshot
         this.unsubscribeFromSnapshot = onSnapshot(userRef, snapShot => {
           this.setState({
             currentUser: {
@@ -40,8 +41,9 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
+    // Clean up the listeners
     if (this.unsubscribeFromAuth) this.unsubscribeFromAuth();
-    if (this.unsubscribeFromSnapshot) this.unsubscribeFromSnapshot(); // Clean up the listener
+    if (this.unsubscribeFromSnapshot) this.unsubscribeFromSnapshot();
   }
 
   render() {

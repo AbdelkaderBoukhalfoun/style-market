@@ -1,70 +1,81 @@
-import React, { useState } from "react";
+import React, { Component } from "react";
 import FormInput from '../form-input/form-input.component';
 import CustomButton from "../custom-button/custom-button.component";
-import { signInWithGooglePopup } from "../../firebase/firebase.utils"; // Corrected import
+import { auth, signInWithGooglePopup } from "../../firebase/firebase.utils"; 
+import { signInWithEmailAndPassword } from "firebase/auth";
 import './sign-in.styles.scss';
 
-const SignIn = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+class SignIn extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: '',
+            password: ''
+        };
+    }
 
-    const handleSubmit = async event => {
+    handleSubmit = async event => {
         event.preventDefault();
-        // Handle email/password sign-in logic here
-        setEmail('');
-        setPassword('');
-    }
+        const { email, password } = this.state;
 
-    const handleChange = event => {
-        const { value, name } = event.target;
-        if (name === 'email') {
-            setEmail(value);
-        } else if (name === 'password') {
-            setPassword(value);
-        }
-    }
-
-    const handleGoogleSignIn = async () => {
         try {
-            await signInWithGooglePopup();
-            // Handle successful Google sign-in
+            // Correct usage of signInWithEmailAndPassword with modular SDK
+            await signInWithEmailAndPassword(auth, email, password);
+            this.setState({ email: '', password: '' }); // Reset state on successful sign-in
+        } catch (error) {
+            console.log('Error signing in', error.message);
+        }
+    };
+
+    handleChange = event => {
+        const { value, name } = event.target;
+        this.setState({ [name]: value });
+    };
+
+    handleGoogleSignIn = async () => {
+        try {
+            await signInWithGooglePopup(); // Google sign-in logic
         } catch (error) {
             console.error('Error signing in with Google', error);
         }
     };
 
-    return (
-        <div className="sign-in">
-            <h2>I already have an account</h2>
-            <span>Sign in with your email and password</span>
+    render() {
+        const { email, password } = this.state;
 
-            <form onSubmit={handleSubmit}>
-                <FormInput
-                    name="email"
-                    type="email"
-                    value={email}
-                    handleChange={handleChange}
-                    label="Email"
-                    required
-                />
+        return (
+            <div className="sign-in">
+                <h2>I already have an account</h2>
+                <span>Sign in with your email and password</span>
 
-                <FormInput
-                    name="password"
-                    type="password"
-                    value={password}
-                    handleChange={handleChange}
-                    label="Password"
-                    required
-                />
-                <div className="buttons">
-                    <CustomButton type="submit">Sign in</CustomButton>
-                    <CustomButton onClick={handleGoogleSignIn} isGoogleSignIn>
-                        Sign in with Google
-                    </CustomButton>
-                </div>
-            </form>
-        </div>
-    );
-};
+                <form onSubmit={this.handleSubmit}>
+                    <FormInput
+                        name="email"
+                        type="email"
+                        value={email}
+                        handleChange={this.handleChange}
+                        label="Email"
+                        required
+                    />
+
+                    <FormInput
+                        name="password"
+                        type="password"
+                        value={password}
+                        handleChange={this.handleChange}
+                        label="Password"
+                        required
+                    />
+                    <div className="buttons">
+                        <CustomButton type="submit">Sign in</CustomButton>
+                        <CustomButton type="button" onClick={this.handleGoogleSignIn} isGoogleSignIn>
+                            Sign in with Google
+                        </CustomButton>
+                    </div>
+                </form>
+            </div>
+        );
+    }
+}
 
 export default SignIn;
