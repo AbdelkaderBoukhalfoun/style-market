@@ -21,6 +21,3 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Ignore sensitive configuration files
-src/firebase/firebase.utils.js
