@@ -1,7 +1,7 @@
 import React from "react";
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
-import { auth, createUserDocumentFromAuth } from "../../firebase/firebase.utils";
+import { auth, createUserProfileDocument } from "../../firebase/firebase.utils"; // Updated import
 import { createUserWithEmailAndPassword } from 'firebase/auth'; // Ensure this is imported
 import './sign-up.styles.scss';
 
@@ -22,13 +22,13 @@ class SignUp extends React.Component {
         const { displayName, email, password, confirmPassword } = this.state;
 
         if (password !== confirmPassword) {
-            alert("Password do not match");
+            alert("Passwords do not match");
             return;
         }
 
         try {
             const { user } = await createUserWithEmailAndPassword(auth, email, password);
-            await createUserDocumentFromAuth(user, { displayName });
+            await createUserProfileDocument(user, { displayName }); // Updated function call
             this.setState({
                 displayName: '',
                 email: '',
