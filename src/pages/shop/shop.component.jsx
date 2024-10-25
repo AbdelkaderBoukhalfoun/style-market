@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 import { Routes, Route } from "react-router-dom";
 import { connect } from "react-redux";
-
 import { collection, onSnapshot } from "firebase/firestore";
-
 import CollectionsOverview from '../../components/collections-overview/collection-overview.component';
 import CollectionPage from "../collection/collection.component";
-
 import { firestore, convertCollectionsSnapshotToMap } from "../../firebase/firebase.utils";
 import { updateCollections } from "../../redux/shop/shop.action";
-
 import WithSpinner from "../../components/with-spinner/with-spinner.component";
 
 const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
@@ -26,11 +22,18 @@ class ShopPage extends Component {
         const { updateCollections } = this.props;
         const collectionRef = collection(firestore, 'collections');
 
-        this.unsubscribeFromSnapshot = onSnapshot(collectionRef, async snapshot => {
-            const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
-            updateCollections(collectionsMap);
-            this.setState({ loading: false });
-        });
+        this.unsubscribeFromSnapshot = onSnapshot(
+            collectionRef,
+            async snapshot => {
+                const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+                updateCollections(collectionsMap);
+                this.setState({ loading: false });
+            },
+            error => {
+                console.error("Error fetching collections:", error);
+                this.setState({ loading: false });
+            }
+        );
     }
 
     componentWillUnmount() {
