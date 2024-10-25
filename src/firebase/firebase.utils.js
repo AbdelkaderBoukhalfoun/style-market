@@ -1,11 +1,11 @@
 import { initializeApp } from 'firebase/app'; 
 import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from 'firebase/auth'; 
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, collection, writeBatch } from 'firebase/firestore';
 
 const config = {
     apiKey: "AIzaSyBPOp9uhmyplZfsjn-gS5os66D60YTus5g",
     authDomain: "style-market-b8427.firebaseapp.com",
-    projectId: "style-market-b8427",
+    projectId:  "style-market-b8427",
     storageBucket: "style-market-b8427.appspot.com",
     messagingSenderId: "523215611646",
     appId: "1:523215611646:web:9aa5dd20d86e7be608a7af",
@@ -44,6 +44,36 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
     return userRef;
 };
+
+// Function to add a collection and its documents
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    const collectionRef = collection(firestore, collectionKey); // Get collection reference
+
+    const batch = writeBatch(firestore);
+    objectsToAdd.forEach(obj => {
+        const newDocRef = doc(collectionRef);
+        batch.set(newDocRef, obj);
+    });
+
+    return await batch.commit()
+};
+
+export const convertCollectionsSnapshotToMap = (collections) => {
+    const transformedCollection = collections.docs.map(doc => {
+        const { title, items } = doc.data();
+
+        return {
+            routeName: encodeURI(title.toLowerCase()),
+            id: doc.id,
+            title,
+            items
+        }
+    });
+    return transformedCollection.reduce((accumulator, collection) => {
+        accumulator[collection.title.toLowerCase()] = collection;
+        return accumulator;
+    } ,{})
+}
 
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: 'select_account' });

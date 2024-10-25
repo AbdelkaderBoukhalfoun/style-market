@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
+
 import CollectionItem from '../../components/collection-item/collection-item.component';
 import { selectCollection } from "../../redux/shop/shop.selector";
 
