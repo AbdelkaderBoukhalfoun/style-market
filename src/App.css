@@ -20,3 +20,52 @@ a {
     text-decoration: none;
     color: black;
 }
+
+/* Add responsive padding for body */
+@media screen and (max-width: 800px) {
+    body {
+        padding: 10px;
+    }
+}
+
+.header {
+    height: 70px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+
+    .logo-container {
+        height: 100%;
+        width: 70px;
+        padding: 25px;
+    }
+
+    .options {
+        width: 50%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+
+        .option {
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+    }
+
+    @media screen and (max-width: 800px) {
+        height: 60px;
+        padding: 10px;
+        margin-bottom: 20px;
+
+        .logo-container {
+            width: 50px;
+            padding: 0;
+        }
+
+        .options {
+            width: 80%;
+        }
+    }
+}
