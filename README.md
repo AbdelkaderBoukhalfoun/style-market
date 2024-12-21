@@ -10,7 +10,6 @@ Welcome to Style Market, a cutting-edge platform designed to revolutionize the f
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ## Introduction
